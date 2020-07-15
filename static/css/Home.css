@@ -1,0 +1,37 @@
+.TaskBar {
+    border-radius: 12px;
+    margin-top: 10px;
+    width: 350px;
+    height: 660px;
+    background-color: #447e9b;
+}
+
+.TaskBar > img {
+    margin-top: 30px;
+    margin-left: 70px;
+}
+
+.TaskBar > h4 {
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.btn-group-vertical {
+    margin-top: 20px;
+}
+
+.ButtonDes {
+    box-shadow: 0 0 10px #6a6161;
+    height: 60px;
+    margin-bottom: 10px;
+    width: 330px;
+    margin-left: 10px;
+    outline: none;
+    border: none;
+    border-radius: 12px;
+}
+
+.ButtonDes:hover {
+    background-color: #f5a742;
+}
