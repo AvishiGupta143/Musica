@@ -1,0 +1,55 @@
+{% extends "Base.html" %}
+{% load static %}
+{% block title %}
+    | Users
+{% endblock %}
+{% block body_block %}
+
+    <style>
+        .users {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            width: 50%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            color: white;
+            border-radius: 12px;
+            padding: 12px 12px 40px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .EachUsers {
+            border-radius: 12px;
+            margin-top: 10px;
+            width: 100%;
+            padding: 5px 5px;
+            border: 1px solid white;
+            background-image: linear-gradient(to right, rgba(252, 163, 17, 0.3), rgba(252, 163, 17, 0.3));
+        }
+
+        .EachUsers:hover {
+            background-color: #f5a742;
+        }
+
+    @media screen and (max-width: 768px){
+        .users{
+            width: 90%;
+        }
+    }
+    </style>
+
+
+
+
+    <div class="container users">
+        {% for i in UserData %}
+            <a style="color: white;" href="{% url 'Profile' i.username %}">
+                <div class="EachUsers">
+                    <div>
+                        <h5 style="margin-left: 30px; margin-top: 5px;">{{ i.first_name }}{{ i.last_name }}</h5>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,538 @@
+{% extends "Base.html" %}
+{% load static %}
+{% load CustomTemplates %}
+{% block title %}
+    | Create Playlist
+{% endblock %}
+{% block body_block %}
+    <style>
+        .Playlist {
+            width: 40%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            display: block;
+            color: white;
+            margin: 50px auto auto;
+            padding: 12px 12px 30px;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .eachsong {
+            width: 97%;
+            height: auto;
+            position: relative;
+            left: 2%;
+            display: inline-block;
+        }
+
+        .albumart {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+
+        .songname {
+            position: relative;
+            top: -40px;
+            left: 90px;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .metadata {
+            position: relative;
+            left: 90px;
+            top: -40px;
+            max-width: 60%;
+            word-break: break-word;
+            font-weight: lighter;
+        }
+
+
+        .Add {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            text-align: center;
+            vertical-align: center;
+            line-height: 30px;
+            margin-left: 350px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 0 10px black;
+            color: lime;
+        }
+
+        .Minus {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            text-align: center;
+            vertical-align: center;
+            line-height: 30px;
+            margin-left: 350px;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 0 10px black;
+            color: red;
+        }
+
+        .Create {
+            display: block;
+            margin: 20px auto;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 150px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .Create:hover {
+            transform: scale(1.2);
+            background-color: #f5a742;
+        }
+
+        .Delete {
+            display: block;
+            margin: 20px auto;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 150px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .Delete:hover {
+            transform: scale(1.2);
+            background-color: #f5a742;
+        }
+
+        .Heading {
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+
+        .OPTION {
+            color: black;
+            font-size: 25px;
+            position: relative;
+            left: 500px;
+            top: -115px;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+
+        @media screen and (max-width: 768px) {
+            .Playlist {
+                width: 90%;
+                display: block;
+                margin: 50px auto auto;
+                padding: 12px 12px 30px;
+                position: relative;
+            }
+        }
+
+        .Each {
+            width: 97%;
+            height: auto;
+            position: relative;
+            left: -10px;
+            display: inline-block;
+        }
+
+        .AlbumArt {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+
+        .SongName {
+            position: relative;
+            top: -40px;
+            left: 90px;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .MetaData {
+            position: relative;
+            left: 90px;
+            top: -40px;
+            max-width: 60%;
+            word-break: break-word;
+            font-weight: lighter;
+        }
+
+        .remove {
+            position: absolute;
+            right: 2px;
+            top: 5px;
+            font-size: 30px;
+            height: 10px;
+            width: 10px;
+            color: #CC3434;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .remove:hover {
+            color: white;
+        }
+
+        .Heading {
+            margin-left: 6px;
+        }
+
+        .ALERT {
+            display: block;
+            margin: auto;
+            width: 40%;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .ALERT {
+                display: block;
+                margin: auto;
+                width: 90%;
+            }
+        }
+    </style>
+
+    <div class="alert alert-success alert-dismissible ALERT" id="ALERTTYPE" style="display: none;">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong id="ALERTMESSAGE">Copied!</strong>
+    </div>
+    <div class="container Playlist">
+        <div class="custom-control custom-switch">
+            {% if Visibility == 'Public' %}
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" onclick="toggleswtich(this)"
+                       value="OFF">
+                <label class="custom-control-label" for="customSwitch1" id="customSwitch1Label">Type
+                    : {{ Visibility }}</label>
+            {% else %}
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" onclick="toggleswtich(this)"
+                       value="ON" checked>
+                <label class="custom-control-label" for="customSwitch1" id="customSwitch1Label">Type
+                    : {{ Visibility }}</label>
+            {% endif %}
+        </div>
+        <h3 class="Heading">{{ PlaylistName }}</h3>
+        {% for i in Playlist %}
+            <div id="List">
+                <div class="Each" id="Each_{{ i.id }}">
+                    <div class="AlbumArt">
+                        <img src="{{ i.Album_Art }}" width="100%"
+                             height="100%">
+                    </div>
+                    <div class="SongName">{{ i.Name }}</div>
+                    <div class="MetaData">{{ i.Album }} - {{ i.Artist }} <br> {{ i.Year }}</div>
+                    <span class="fa fa-close remove" onclick="Delete('Each_{{ i.id }}', '{{ i.id }}');"></span>
+                    <div class="dropdown">
+                        <button class="fas fa-ellipsis-h  OPTION" type="button" id="dropdownMenu2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <button class="dropdown-item" type="button" disabled>Copy To <i
+                                    class="fas fa-caret-right"></i>
+                            </button>
+                            {% for f in Playlists %}
+                                <button class="dropdown-item" type="button"
+                                        onclick="CopyTo('{{ i.id }}', '{{ f.id }}');">{{ f.Playlist_Name }}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <br>
+        <button data-toggle="modal" data-target="#AddMoreSongs" type="button" class="Create">Add More Songs</button>
+        <form action="{% url 'DeletePlaylist' %}" method="post">
+            {% csrf_token %}
+            <button name="DeletePlaylist" value="{{ Playlist_ID }}" type="submit" class="Delete">Delete Playlist
+            </button>
+        </form>
+    </div>
+
+
+    <div style="background-color: #0e1a31;" class="modal fade" id="AddMoreSongs" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add More Songs</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="SongsToAdd();">
+                        <span aria-hidden="true">Save</span>
+                    </button>
+                </div>
+                <div style="background-color: rgba(220,146,51,0.93);" class="modal-body" id="MODALBODY">
+                    {% for i in Songs %}
+                        <div class="eachsong" id="Each_Add_{{ i.id }}">
+                            <div class="albumart">
+                                <img src="{{ i.Album_Art }}" width="100%"
+                                     height="100%">
+                            </div>
+                            <div class="songname">{{ i.Name }}</div>
+                            <div class="metadata">{{ i.Album }} - {{ i.Artist }}</div>
+                            <div class="fa fa-plus Add" id="Toggle_BTN_{{ i.id }}"
+                                 onclick="AddMoreSongs('{{ i.id }}', 'Toggle_BTN_{{ i.id }}');"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var Collections = []
+
+        function AddMoreSongs(id, BTN) {
+            var index = Collections.indexOf(id);
+            var x = document.getElementById(BTN)
+            if (x.className === 'fa fa-plus Add') {
+                x.className = 'fa fa-minus Minus'
+                Collections.push(id)
+            } else {
+                x.className = 'fa fa-plus Add'
+                if (index > -1) {
+                    Collections.splice(index, 1);
+                }
+            }
+        }
+
+        function SongsToAdd() {
+            var titleStr = "firstTitle";
+            var ToAdd = Collections;
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'AddToPlaylist' %}",
+                data: {'Songs': ToAdd, 'Playlist_ID': {{ Playlist_ID }}, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: 'json',
+                success: function (response) {
+                    for (var j = 0; j < ToAdd.length; j++) {
+                        var Song_ID = ToAdd[j]
+                        document.getElementById('Each_Add_' + ToAdd[j]).remove();
+                        AddTOList(Song_ID);
+                    }
+                    Collections = [];
+                },
+                error: function (response) {
+                }
+            })
+        }
+
+        function AddTOList(Song_ID) {
+            console.log(Song_ID)
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'GiveDetails' %}",
+                data: {'Song': Song_ID, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response)
+                    var One = document.createElement('div')
+                    One.className = 'Each'
+                    One.id = 'Each_' + Song_ID
+
+                    var Two = document.createElement('div')
+                    Two.className = 'AlbumArt'
+
+                    var Three = document.createElement('img')
+                    Three.src = response.Album_Art
+                    Three.style.width = '100%'
+                    Three.style.height = '100%'
+                    Two.append(Three)
+
+                    var Four = document.createElement('div')
+                    Four.className = 'SongName'
+                    Four.innerText = response.Name
+
+                    var Five = document.createElement('div')
+                    Five.className = 'MetaData'
+                    Five.innerText = response.Album + ' - ' + response.Artist + '\n' + response.Year
+                    var Six = document.createElement('span')
+                    Six.className = 'fa fa-close remove'
+                    Six.setAttribute('onclick', "Delete(" + "'Each_" + Song_ID + "'" + ', ' + "'" + Song_ID + "'" + ');')
+
+                    var Seven = document.createElement('div')
+                    Seven.className = 'dropdown'
+
+                    var Eight = document.createElement('button')
+                    Eight.className = 'fas fa-ellipsis-h  OPTION'
+                    Eight.type = 'button'
+                    Eight.id = 'dropdownMenu2'
+                    Eight.setAttribute('data-toggle', 'dropdown')
+                    Eight.setAttribute('aria-haspopup', 'true')
+                    Eight.setAttribute('aria-expanded', 'false')
+
+                    var Nine = document.createElement('div')
+                    Nine.className = 'dropdown-menu'
+                    Nine.setAttribute('aria-labelledby', 'dropdownMenu2')
+
+                    var Ten = document.createElement('button')
+                    Ten.className = 'dropdown-item'
+                    Ten.type = 'button'
+                    Ten.disabled
+                    Ten.innerText = 'Copy To'
+
+                    Nine.append(Ten)
+                    {% for i in Playlists %}
+                        var Eleven = document.createElement('button')
+                        Eleven.className = 'dropdown-item'
+                        Eleven.type = 'button'
+                        Eleven.innerText = '{{ i.Playlist_Name }}'
+                        Eleven.setAttribute('onclick', "CopyTo('" + Song_ID + "', '{{ i.id }}');")
+                        Nine.append(Eleven)
+                    {% endfor %}
+                    Seven.append(Eight, Nine)
+                    One.append(Two, Four, Five, Six, Seven)
+                    $("#List").last().append(One);
+                },
+                error: function (response) {
+                }
+            })
+        }
+
+        function Delete(str, id) {
+            document.getElementById(str).remove();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'RemoveSongFromPlaylist' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'Song': id,
+                    'Playlist': "{{ Playlist_ID }}",
+                },
+                dataType: 'json',
+                success: function (response) {
+                    CreateInAdding(id);
+                },
+                error: function (rs) {
+                    alert(rs.responseText);
+                },
+            })
+        }
+
+        function CreateInAdding(id) {
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'GiveDetails' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'Song': id,
+                },
+                dataType: 'json',
+                success: function (response) {
+
+                    var One = document.createElement('div')
+                    One.className = 'eachsong'
+                    One.id = 'Each_Add_' + id
+
+                    var Two = document.createElement('div')
+                    Two.className = 'albumart'
+
+                    var Three = document.createElement('img')
+                    Three.src = response.Album_Art
+                    Three.style.width = '100%'
+                    Three.style.height = '100%'
+
+                    Two.append(Three)
+
+                    var Four = document.createElement('div')
+                    Four.className = 'songname'
+                    Four.innerText = response.Name
+
+                    var Five = document.createElement('div')
+                    Five.className = 'metadata'
+                    Five.innerText = response.Album + ' - ' + response.Artist
+
+                    var Six = document.createElement('div')
+                    Six.className = 'fa fa-plus Add'
+                    Six.id = 'Toggle_BTN_' + id
+                    Six.setAttribute('onclick', "AddMoreSongs('" + id + "', 'Toggle_BTN_" + id + "');")
+
+                    One.append(Two, Four, Five, Six)
+                    document.getElementById('MODALBODY').append(One)
+                },
+                error: function (rs) {
+                    alert(rs.responseText);
+                },
+            })
+
+
+        }
+
+        function toggleswtich(str) {
+            if (str.value === 'OFF') {
+                str.value = 'ON'
+            } else {
+                str.value = 'OFF'
+            }
+            console.log(str.value)
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'MakePrivate' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'id': "{{ Playlist_ID }}",
+                },
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response.Result)
+                    document.getElementById('customSwitch1Label').innerText = 'Type : ' + response.Result
+                },
+                error: function (rs) {
+                    alert(rs.responseText);
+                },
+            })
+        }
+
+        function CopyTo(S_ID, P_ID) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'CopyTo' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'S_ID': S_ID,
+                    'P_ID': P_ID,
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.Result === 'Added') {
+                        document.getElementById('ALERTTYPE').style.display = 'inherit'
+                        document.getElementById('ALERTTYPE').className = 'alert alert-success alert-dismissible ALERT'
+                        document.getElementById('ALERTMESSAGE').innerText = 'Copied To ' + response.AddedTo
+                    } else {
+                        document.getElementById('ALERTTYPE').style.display = 'inherit'
+                        document.getElementById('ALERTTYPE').className = 'alert alert-danger alert-dismissible ALERT'
+                        document.getElementById('ALERTMESSAGE').innerText = 'Already Exists in ' + response.AddedTo
+                    }
+                },
+                error: function (rs) {
+                    alert(rs.responseText);
+                },
+            })
+        }
+    </script>
+{% endblock %}

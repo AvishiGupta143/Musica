@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Musica {% block title %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/Icon.jpg' %}"/>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet'/>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
+    <link href='https://fonts.googleapis.com/css?family=Berkshire Swash' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet'/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+    body {
+        background-color: #2D4B8B;
+    }
+
+    .navbar {
+        background-color: #0e1a31;
+    }
+
+    .navbar-brand {
+        font-size: 40px;
+        margin-left: 40px;
+    }
+
+    .home {
+        margin-left: 400px;
+    }
+
+    .logout {
+        margin-left: 500px;
+    }
+
+    .Register {
+        margin-left: 1150px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #FCA311;
+    }
+
+    @media screen and (max-width: 1024px) {
+        .nav-link {
+            border-bottom: 1px solid white;
+        }
+
+        .home {
+            margin-left: 0;
+        }
+
+        .logout {
+            margin-left: 0;
+            border-bottom: none;
+        }
+
+        .Register {
+            margin-left: 0px;
+            border-bottom: 1px solid white;
+        }
+    }
+</style>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <a style="color: white;" class="navbar-brand" href="{% url 'Homepage' %}">Musica</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link home" href="{% url 'Homepage' %}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a style="color: white;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Features
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'AddSongs' %}">Add Songs</a>
+                        <a class="dropdown-item" href="{% url 'CreatePlaylist' %}">Create Playlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'Playlists' %}">Modify Playlists</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="{% url 'Songs' %}">Songs</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="{% url 'Playlists' %}">Playlists</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link" href="{% url 'Users' %}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color: white;" class="nav-link logout" href="{% url 'Logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a data-toggle="modal" data-target="#RegisterModal" style="color: white;" class="nav-link Register"
+                       href="{% url 'Register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="modal" data-target="#LoginModal" style="color: white; border-bottom: none;"
+                       class="nav-link" href="{% url 'Login' %}">Login</a>
+                </li>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
+
+{% block body_block %}
+{% endblock %}
+</body>
+</html>

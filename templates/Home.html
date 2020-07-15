@@ -1,0 +1,357 @@
+{% extends "Base.html" %}
+{% load static %}
+{% block title %}
+    | Home
+{% endblock %}
+{% block body_block %}
+
+    <style>
+
+        .modal {
+            background-color: #14213D;
+        }
+
+        .modal-body {
+            text-align: center;
+        }
+
+        .SPAN {
+            display: block;
+
+        }
+
+        input {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .submit {
+            color: white;
+            border-radius: 5px;
+            width: 100px;
+            height: 40px;
+            box-shadow: 0 0 5px #6a6161;
+            border: none;
+            outline: none;
+            background-color: black;
+            transition: 0.3s ease;
+        }
+
+        .submit:hover {
+            background-color: #FCA311;
+        }
+
+        .HomeImage {
+            margin-left: 200px;
+            margin-top: -80px;
+            width: 60%;
+            height: 400px;
+
+        }
+
+        .jumbotron {
+            background-color: #f8bd5c;
+        }
+
+        .BUTTON1 {
+            display: none;
+            margin-right: 20px;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .BUTTON1:hover {
+            transform: scale(1.2);
+            background-color: #14213D;
+        }
+
+        .BUTTON2 {
+            display: none;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .BUTTON2:hover {
+            transform: scale(1.2);
+            background-color: #14213D;
+        }
+
+
+        @media screen and (max-width: 768px) {
+            .HomeImage {
+                width: 80%;
+                height: 200px;
+                margin-left: 25px;
+                margin-top: -40px;
+            }
+
+            .jumbotron {
+                width: 80%;
+            }
+
+            .BUTTON1 {
+                margin-right: 5px;
+                display: initial;
+            }
+
+            .BUTTON2 {
+                display: initial;
+            }
+        }
+
+    </style>
+
+
+    <div class="container jumbotron">
+        <img class="HomeImage" src="{% static 'img/HomeIcon.png' %}">
+        <h3>Musica</h3>
+        <p>
+            A web application made on django backend app and rest api which can feed data to a music app.
+            Musica has a number of features like, to Add Songs, to Create Your Playlist, to Modify your Playlist.
+            It also shows the number of users of this Web application and their playlists which may be Private or
+            Public.
+            To explore the application, Please Register yourself and then Login.
+            Thankyou.
+        </p>
+        {% if not user.is_authenticated %}
+            <button data-toggle="modal" data-target="#RegisterModal" class="BUTTON1">Register</button>
+            <button data-toggle="modal" data-target="#LoginModal" class="BUTTON2">Login</button>
+        {% endif %}
+    </div>
+
+    <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Register Yourself to Musica</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            id="CloseButtonRegister">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span class="SPAN">Enter Your Name:</span>
+                    <input id="Name" name="Name" class="form-control" type="text" placeholder="Enter Name" required>
+                    <span>Enter Your Email:</span>
+                    <input id="Email" onkeyup="CheckEmail(this.value);" class="form-control" name="Email" type="email"
+                           placeholder="Enter Email" required>
+                    <span>Enter Password:</span>
+                    <input id="Password1" onkeyup="CheckPassLength(this.value);" class="form-control" name="Password"
+                           type="password"
+                           placeholder="Enter Password" required>
+                    <span>Re-enter Password:</span>
+                    <input id="Password2" onkeyup="CheckPassword();" class="form-control" type="password"
+                           placeholder="Re-enter Password" required>
+                    <div class="modal-footer">
+                        <button onclick="Register();" id="RegisterBTN" type="button" class="submit">Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Register Yourself to Musica</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'Login' %}" method="post" onsubmit="return CheckLoginPassword();">
+                        {% csrf_token %}
+                        <span>Enter Your Email:</span>
+                        <input onkeyup="CheckLoginMail(this.value);" id="LoginMail" class="form-control" name="Email"
+                               type="email" placeholder="Enter Email">
+                        <span>Enter Password:</span>
+                        <input class="form-control" name="Password" id="LoginPassword" type="password"
+                               placeholder="Enter Password">
+                        <div class="modal-footer">
+                            <button type="submit" class="submit">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function CheckLoginPassword() {
+            var res = 0;
+            var Email = document.getElementById('LoginMail').value
+            var Password = document.getElementById('LoginPassword').value
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "{% url 'CheckLoginPassword' %}",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'Email': Email,
+                        'Password': Password,
+                    },
+                    async: false,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.Result === 'Done') {
+                            res = 1;
+                        } else {
+                            document.getElementById('LoginPassword').style.border = '2px solid red'
+                            res = 0
+                        }
+                    },
+                    error: function (rs) {
+                        alert(rs.responseText);
+                    }
+                });
+            return Boolean(res);
+        }
+
+        function CheckLoginMail(str) {
+            var Email = document.getElementById('LoginMail')
+            if (str === '') {
+
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "{% url 'CheckEmail' %}",
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'Email': str,
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response)
+                            if (response.Result !== 'Not') {
+                                Email.style.border = '2px solid lime'
+                            } else {
+                                Email.style.border = '2px solid red'
+                            }
+                        },
+                        error: function (rs) {
+                            alert(rs.responseText);
+                        }
+                    });
+            }
+        }
+
+        function CheckEmail(str) {
+            var Email = document.getElementById('Email')
+            if (str === '') {
+
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "{% url 'CheckEmail' %}",
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'Email': str,
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response)
+                            if (response.Result === 'Not') {
+                                Email.style.border = '2px solid lime'
+                            } else {
+                                Email.style.border = '2px solid red'
+                            }
+                        },
+                        error: function (rs) {
+                            alert(rs.responseText);
+                        }
+                    });
+            }
+        }
+
+        function CheckPassword() {
+            var a = document.getElementById('Password1').value
+            var b = document.getElementById('Password2').value
+            if (a === b) {
+                document.getElementById('Password2').style.border = '2px solid lime'
+            } else {
+                document.getElementById('Password2').style.border = '2px solid red'
+            }
+        }
+
+        function CheckPassLength(str) {
+            if (str === '') {
+                document.getElementById('Password1').style.border = '2px solid lime'
+            } else if (str.length <= 6) {
+                document.getElementById('Password1').style.border = '2px solid red'
+            } else {
+                document.getElementById('Password1').style.border = '2px solid lime'
+            }
+        }
+
+        function Register() {
+            var Name = document.getElementById('Name')
+            var Email = document.getElementById('Email')
+            var Password1 = document.getElementById('Password1')
+            var Password2 = document.getElementById('Password2')
+            if (Name.value === '' || Email.value === '' || Password1.value === '' || Password2.value === '') {
+                console.log('Error')
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "{% url 'Register' %}",
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'Name': Name.value,
+                            'Email': Email.value,
+                            'Password1': Password1.value,
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response)
+                            document.getElementById('CloseButtonRegister').click()
+                            document.getElementById('OpenButtonLogin').click()
+                        },
+                        error: function (rs) {
+                            alert(rs.responseText);
+                        }
+                    });
+            }
+        }
+
+        function CheckAll() {
+            var x = document.getElementById('RegisterBTN')
+            var Email = document.getElementById('Email').style.border
+            var Password1 = document.getElementById('Password1').style.border
+            var PAssword2 = document.getElementById('Password2').style.border
+            if (Email === '2px solid red' || Password1 === '2px solid red' || PAssword2 === '2px solid red') {
+                x.disabled = true;
+                return false
+            }
+            x.disabled = true;
+            return true
+        }
+    </script>
+
+
+{% endblock %}

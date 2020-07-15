@@ -1,0 +1,116 @@
+{% extends "Base.html" %}
+{% load static %}
+{% block title %}
+    | Add Songs
+{% endblock %}
+{% block body_block %}
+
+<style>
+        .Form {
+            width: 40%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            display: block;
+            color: white;
+            margin: 50px auto auto;
+            padding: 12px 12px 30px;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .form{
+            margin-top: 40px;
+        }
+        h3 {
+            text-align: center;
+        }
+
+
+        .SPAN {
+            margin-left: 40px;
+            font-weight: bolder;
+        }
+
+        input[type='file'] {
+            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-left: 20px;
+            display: none;
+        }
+
+        .SongFile {
+            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-left: 40px;
+            font-weight: bolder;
+        }
+
+        input[type='text'] {
+            padding: 12px 12px;
+            width: 80%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+            margin-left: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px black;
+        }
+
+        .Submit {
+            display: block;
+            margin: 20px auto;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 100px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .Submit:hover {
+            transform: scale(1.2);
+            background-color: #f5a742;
+        }
+
+        @media screen and (max-width: 768px) {
+            .Form {
+                width: 90%;
+                display: block;
+                margin: 10px auto auto;
+                padding: 12px 12px 30px;
+                position: relative;
+            }
+
+            .SPAN{
+                margin-left: 30px;
+            }
+            input[type='text']{
+                margin-left: 25px;
+            }
+
+        }
+    </style>
+    <div class="container Form">
+        <form class="form" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <span class="SPAN" style="display: block;">Song Name:</span>
+            <input type="text" name="SongName" placeholder="Song Name">
+            <span class="SPAN" style="display: block;">Album:</span>
+            <input type="text" name="Album" placeholder="Album">
+            <span class="SPAN" style="display: block;">Artist:</span>
+            <input type="text" name="Artist" placeholder="Artist">
+            <span class="SPAN" style="display: block;">Year of Release:</span>
+            <input type="text" name="Year" placeholder="Year">
+            <span class="SPAN" style="display: block;">Song File:</span>
+            <label for="file" class="SongFile">Click here to select a song.</label>
+            <input id="file" class="file" type="file" name="File"><br>
+            <button class="Submit">Submit</button>
+        </form>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "Base.html" %}
+{% load static %}
+{% load CustomTemplates %}
+{% block title %}
+    | Create Playlist
+{% endblock %}
+{% block body_block %}
+    <style>
+        .Playlist {
+            width: 40%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            display: block;
+            color: white;
+            margin: 50px auto auto;
+            padding: 12px 12px 30px;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .INPUT {
+            padding: 12px 12px;
+            width: 70%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+            margin-left: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px black;
+        }
+
+        .Create {
+            display: block;
+            margin: 20px auto;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            width: 120px;
+            height: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #6a6161;
+            transition: 0.3s ease;
+        }
+
+        .Create:hover {
+            transform: scale(1.2);
+            background-color: #f5a742;
+        }
+
+        @media screen and (max-width: 768px) {
+            .Playlist {
+                width: 90%;
+                display: block;
+                margin: 50px auto auto;
+                padding: 12px 12px 30px;
+                position: relative;
+            }
+        }
+
+        .Each {
+            width: 97%;
+            height: auto;
+            position: relative;
+            left: -10px;
+            display: inline-block;
+        }
+
+        .AlbumArt {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+
+        .SongName {
+            font-size: 15px;
+            position: relative;
+            top: -40px;
+            left: 90px;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .MetaData {
+            position: relative;
+            left: 90px;
+            top: -40px;
+            max-width: 60%;
+            word-break: break-word;
+            font-weight: lighter;
+        }
+
+        .CHECK {
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+        }
+    </style>
+    <div class="container Playlist">
+        <h3 style="margin-top: 20px; text-align: center;">Create your own Playlist Here</h3>
+        <form action="" method="post">
+            {% csrf_token %}
+            <span style="display: block; text-align: left; margin-top: 40px; margin-left: 40px; text-decoration: white underline; font-weight: bolder;">Name of your Playlist:</span>
+            <input class="INPUT" type="text" name="Name" placeholder="Playlist Name" required>
+            <span style="display: block; text-align: left; margin-left: 40px; margin-bottom: 20px; text-decoration: white underline; font-weight: bolder;">Select the Songs:</span>
+
+            {% for i in Songs %}
+                <div class="Each">
+                    <div class="AlbumArt">
+                        <img src="{{ i.Album_Art }}" width="100%"
+                             height="100%">
+                    </div>
+                    <div class="SongName">{{ i.Name }}</div>
+                    <div class="MetaData">{{ i.Album }} - {{ i.Artist }} <br> {{ i.Year }}</div>
+                    <input class="CHECK" type="checkbox" id="Song_{{ i.id }}" name="{{ i.id }}">
+                </div>
+            {% endfor %}
+            <br>
+            <button type="submit" class="Create">Create Playlist</button>
+        </form>
+    </div>
+{% endblock %}

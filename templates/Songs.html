@@ -1,0 +1,98 @@
+{% extends "Base.html" %}
+{% load static %}
+{% block title %}
+    | Songs
+{% endblock %}
+{% block body_block %}
+
+    <style>
+        .AllSongs {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            width: 50%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            color: white;
+            border-radius: 12px;
+            padding: 12px 12px 40px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .EachSong {
+            background-image: linear-gradient(to right, rgba(252, 163, 17,0.3), rgba(252, 163, 17,0.3));
+            display: block;
+            width: 80%;
+            height: 60px;
+            border-radius: 5px;
+            border: 1px solid #f5a742;
+            top: 20px;
+            margin: auto auto 10px;
+        }
+        .EachSong:hover{
+            background-color:rgb(252, 163, 17) ;
+        }
+
+        .AlbumArt {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+
+        .SongName {
+            position: relative;
+            top: -35px;
+            left: 75px;
+            max-width: 200px;
+            word-break: break-word;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .AllSongs{
+                width: 90%;
+            }
+            .EachSong{
+                width: 95%;
+            }
+            .AlbumArt{
+                width: 30px;
+                height: 30px;
+                left:8px;
+                top: 15px;
+            }
+            .SongName{
+                left: 50px;
+                font-size: 15px;
+                top: -20px;
+            }
+        }
+    </style>
+
+    <div class="container AllSongs">
+        <h3 style="text-align: center; margin-top: 20px;margin-bottom: 20px;">List of all Songs</h3>
+        {% for i in Songs %}
+            <div class="EachSong" onclick="PlayThis('{{ i.Song_File.url }}');">
+                <div class="AlbumArt">
+                    <img src="{{ i.Album_Art }}" width="100%" height="100%">
+                </div>
+                <div class="SongName">{{ i.Name }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <audio id="Player" src=""></audio>
+    <script>
+        function PlayThis(str) {
+            var Player = document.getElementById('Player')
+            Player.src = str
+            Player.load();
+            Player.play();
+        }
+    </script>
+
+
+
+
+
+
+{% endblock %}

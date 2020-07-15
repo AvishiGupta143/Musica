@@ -1,0 +1,478 @@
+{% extends "Base.html" %}
+{% load static %}
+{% block title %}
+    | Playlist | Happy
+{% endblock %}
+{% block body_block %}
+
+
+    <style>
+
+        .Playlist {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            width: 50%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            color: white;
+            border-radius: 12px;
+            padding: 12px 12px 40px;
+            box-shadow: 0 0 20px #f5a742;
+        }
+
+        .Name {
+            margin-left: 80px;
+            margin-top: 10px;
+
+        }
+
+        .EachSong {
+            background-image: linear-gradient(to right, rgba(252, 163, 17, 0.3), rgba(252, 163, 17, 0.3));
+            display: block;
+            width: 80%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid #f5a742;
+            top: 20px;
+            margin: 10px auto;
+            padding-bottom: 0;
+        }
+
+        .SongName {
+            position: relative;
+            top: -35px;
+            left: 75px;
+            max-width: 200px;
+            word-break: break-word;
+        }
+
+        .EachSong:hover {
+            background-color: rgb(252, 163, 17);
+        }
+
+        .AlbumArt {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            top: 10px;
+            left: 20px;
+        }
+
+        .PlaylistType {
+            margin-left: 80px;
+            margin-right: 5px;
+        }
+
+        .MetaData {
+            position: relative;
+            left: 75px;
+            top: -30px;
+            word-break: break-word;
+            height: auto;
+            font-weight: lighter;
+            width: 80%;
+            max-width: 60%;
+        }
+
+        .Sort {
+            position: relative;
+            top: 70px;
+            width: 130px;
+            left: 60%;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .Playlist {
+                width: 95%;
+            }
+
+            .EachSong {
+                width: 100%;
+                height: 90px;
+            }
+
+            .AlbumArt {
+                width: 30px;
+                top: 15px;
+                left: 10px;
+            }
+
+            .SongName {
+                top: -30px;
+                left: 50px;
+                font-size: 15px;
+            }
+
+            .MetaData {
+                font-size: 10px;
+                left: 50px;
+                top: -30px;
+                width: 80%;
+            }
+
+            .Name {
+                font-size: 25px;
+                margin-left: 0px;
+                margin-bottom: -5px;
+            }
+
+            .PlaylistType {
+                margin-left: 0;
+                margin-top: -20px;
+            }
+
+            .Sort {
+                width: 100px;
+                left: 130px;
+                top: 50px;
+            }
+        }
+    </style>
+
+
+    <div class="container Playlist">
+        {% if Visibility == 'Public' %}
+            <div class="dropdown Sort">
+                <button style="width: 150px;" class="btn btn-secondary dropdown-toggle " type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sorted By Name
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Name();">Name</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Album();">Album</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Artists();">Artist</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Year();">Year</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Name_Reversed();">Name (descending)</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Album_Reversed();">Album (descending)</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Artist_Reversed();">Artist (descending)</a>
+                    <a class="dropdown-item" href="#" onclick="Sort_By_Year_Reversed();">Year (descending)</a>
+                </div>
+            </div>
+        {% else %}
+            {% if user.username == Owner %}
+                <div class="dropdown Sort">
+                    <button style="width: 150px;" class="btn btn-secondary dropdown-toggle " type="button"
+                            id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sorted By Name
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Name();">Name</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Album();">Album</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Artists();">Artist</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Year();">Year</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Name_Reversed();">Name (descending)</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Album_Reversed();">Album (descending)</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Artist_Reversed();">Artist (descending)</a>
+                        <a class="dropdown-item" href="#" onclick="Sort_By_Year_Reversed();">Year (descending)</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <h3 class="Name">{{ Playlist_Name }}</h3>
+        <small class="PlaylistType">Playlist Type :</small><small>{{ Visibility }}</small>
+        {% if Visibility == 'Public' %}
+            <div id="List">
+                {% for i in Songs_by_Name %}
+                    <div class="EachSong" onclick="PlayThis('{{ i.Song_File.url }}');">
+                        <div class="AlbumArt">
+                            <img src="{{ i.Album_Art }}" width="100%" height="100%">
+                        </div>
+                        <div class="SongName">{{ i.Name|safe }}</div>
+                        <div class="MetaData">{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if user.username == Owner %}
+                <div id="List">
+                    {% for i in Songs_by_Name %}
+                        <div class="EachSong" onclick="PlayThis('{{ i.Song_File.url }}');">
+                            <div class="AlbumArt">
+                                <img src="{{ i.Album_Art }}" width="100%" height="100%">
+                            </div>
+                            <div class="SongName">{{ i.Name|safe }}</div>
+                            <div class="MetaData">{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h3 style="margin-top: 10px; margin-left: 80px;">This is a Private Playlist</h3>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <audio id="Player" src=""></audio>
+    <script>
+        function PlayThis(str) {
+            var Player = document.getElementById('Player')
+            Player.src = str
+            Player.load();
+            Player.play();
+        }
+
+        function Sort_By_Name_Reversed() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Name'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Name.reverse %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Album_Reversed() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Album'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Album.reverse %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Artist_Reversed() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Artist'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Artist.reverse %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Year_Reversed() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Year'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Year.reverse %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Year() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Year'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Year %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Artists() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Artist'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Artist %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Name() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Name'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Name %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                x.append(One)
+            {% endfor %}
+        }
+
+        function Sort_By_Album() {
+            document.getElementById('dropdownMenuButton').innerText = 'Sorted By Album'
+            var x = jQuery('#List')
+            x.html('');
+            {% for i in Songs_by_Album %}
+                var One = document.createElement('div')
+                One.className = 'EachSong'
+                One.setAttribute('onclick', "PlayThis('{{ i.Song_File.url }}');")
+
+                var Two = document.createElement('div')
+                Two.className = 'AlbumArt'
+
+                var Three = document.createElement('img')
+                Three.src = "{{ i.Album_Art }}"
+                Three.style.width = '100%'
+                Three.style.height = '100%'
+
+                Two.append(Three)
+
+                var Four = document.createElement('div')
+                Four.className = 'SongName'
+                Four.innerText = "{{ i.Name|safe }}"
+
+                var Five = document.createElement('div')
+                Five.className = 'MetaData'
+                Five.innerText = '{{ i.Album|safe }} - {{ i.Artist|safe }} , {{ i.Year }}'
+
+                One.append(Two, Four, Five)
+                console.log(One)
+                x.append(One)
+            {% endfor %}
+        }
+    </script>
+{% endblock %}
